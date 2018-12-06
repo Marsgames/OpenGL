@@ -9,6 +9,7 @@
 #include <glfw3.h>
 #include <GLM/vec3.hpp>
 #include <STL/stl.h>
+#include "main.hpp"
 
 #include <vector>
 #include <iostream>
@@ -30,13 +31,6 @@ static void key_callback(GLFWwindow* window, int key, int /*scancode*/, int acti
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
-
-/* PARTICULES */
-struct Particule {
-    glm::vec3 position;
-    glm::vec3 color;
-    glm::vec3 speed;
-};
 
 vector<Particule> MakeParticules(const int n)
 {
@@ -124,11 +118,6 @@ GLuint AttachAndLink(vector<GLuint> shaders)
     return prg;
 }
 
-void DrawSTL()
-{
-    ReadStl("/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/logo.stl");
-}
-
 int main(void)
 {
     GLFWwindow* window;
@@ -163,13 +152,40 @@ int main(void)
         exit(-1);
     }
     
-    //    size_t nParticules = 10000;
+    
+    /////////////////////////////////////////////////////////////////////////
+    ///
+    ///
+    ///
+    /////////////////////////////////////////////////////////////////////////
+    
+    cout << "0 : DrawParticle" << endl << "1 : DrawSTL(logo)" << endl;
+    int action = 0;
+    cin >> action;
+    
+    switch (action) {
+        case 0:
+            DrawParticle(window);
+            break;
+        case 1:
+            DrawSTL("logo.stl", window);
+            break;
+            
+        default:
+            DrawParticle(window);
+            break;
+    }
+    
+}
+
+void DrawParticle(GLFWwindow* window)
+{
     const size_t nParticules = 10000;
     auto particules = MakeParticules(nParticules);
     
     // Shader
-    const auto vertex = MakeShader(GL_VERTEX_SHADER, "/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/shader.vert");
-    const auto fragment = MakeShader(GL_FRAGMENT_SHADER, "/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/shader.frag");
+    const auto vertex = MakeShader(GL_VERTEX_SHADER, ShaderString + "shader.vert");
+    const auto fragment = MakeShader(GL_FRAGMENT_SHADER, ShaderString + "shader.frag");
     
     const auto program = AttachAndLink({vertex, fragment});
     
@@ -197,7 +213,6 @@ int main(void)
     
     glPointSize(5.f);
     
-    DrawSTL();
     
     //    while (!glfwWindowShouldClose(window))
     default_random_engine generator;
@@ -231,6 +246,60 @@ int main(void)
         glfwPollEvents();
         
         glBufferSubData(GL_ARRAY_BUFFER, 0, nParticules * sizeof(Particule), particules.data());
+        
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
+}
+
+void DrawSTL(string path, GLFWwindow* window)
+{
+    vector<Triangle> logoArray = ReadStl((Path + path).c_str());
+
+    const auto vertex = MakeShader(GL_VERTEX_SHADER, ShaderString + "shaderSTL.vert");
+    const auto fragment = MakeShader(GL_FRAGMENT_SHADER, ShaderString + "shaderSTL.frag");
+    
+    const auto programSTL = AttachAndLink({vertex, fragment});
+    
+    glUseProgram(programSTL);
+    
+    // Buffers
+    GLuint vbo, vao;
+    glGenBuffers(1, &vbo);
+    glGenVertexArrays(1, &vao);
+    
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, logoArray.size() * sizeof(Triangle), logoArray.data(), GL_STATIC_DRAW);
+    
+    // Bindings
+    const auto index = glGetAttribLocation(programSTL, "position");
+    //    const auto indexColor = glGetAttribLocation(program, "color");
+    
+    glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), nullptr);
+    glEnableVertexAttribArray(index);
+    
+    //    glVertexAttribPointer(indexColor, 3, GL_FLOAT, GL_FALSE, sizeof(Particule), (void*)sizeof(vec3));
+    //    glEnableVertexAttribArray(indexColor);
+    
+    while (!glfwWindowShouldClose(window))
+    {
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        
+        glViewport(0, 0, width, height);
+        
+        glClear(GL_COLOR_BUFFER_BIT);
+        // glClearColor(1.f, 0.0f, 1.f, 1.0f);
+        
+        
+        glDrawArrays(GL_TRIANGLES, 0, logoArray.size() * 3);
+        
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+        
+        // glBufferSubData(GL_ARRAY_BUFFER, 0, logoArray.size() * sizeof(Triangle), logoArray.data());
         
     }
     glfwDestroyWindow(window);
