@@ -10,6 +10,7 @@
 		AE37A64421B9300C0060A7CA /* libglfw.3.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE37A64221B9300B0060A7CA /* libglfw.3.2.dylib */; };
 		AE37A64521B9300C0060A7CA /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE37A64321B9300B0060A7CA /* libglfw3.a */; };
 		AE37A64B21B931B90060A7CA /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = AE37A64A21B931B90060A7CA /* glad.c */; };
+		AE37A65021B95D4B0060A7CA /* stl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE37A64E21B95D4A0060A7CA /* stl.cpp */; };
 		AE4733FE21B910650012B91F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE4733FD21B910650012B91F /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,9 @@
 		AE37A64221B9300B0060A7CA /* libglfw.3.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.2.dylib; path = ../../../../../../usr/local/lib/libglfw.3.2.dylib; sourceTree = "<group>"; };
 		AE37A64321B9300B0060A7CA /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
 		AE37A64A21B931B90060A7CA /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
+		AE37A64C21B95D2F0060A7CA /* logo.stl */ = {isa = PBXFileReference; lastKnownFileType = file; path = logo.stl; sourceTree = "<group>"; };
+		AE37A64E21B95D4A0060A7CA /* stl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stl.cpp; sourceTree = "<group>"; };
+		AE37A64F21B95D4B0060A7CA /* stl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stl.h; sourceTree = "<group>"; };
 		AE4733FA21B910650012B91F /* OpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE4733FD21B910650012B91F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		AE47340621B911ED0012B91F /* gtc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = gtc; sourceTree = "<group>"; };
@@ -90,6 +94,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AE37A64D21B95D400060A7CA /* STL */ = {
+			isa = PBXGroup;
+			children = (
+				AE37A64E21B95D4A0060A7CA /* stl.cpp */,
+				AE37A64F21B95D4B0060A7CA /* stl.h */,
+			);
+			path = STL;
+			sourceTree = "<group>";
+		};
 		AE4733F121B910650012B91F = {
 			isa = PBXGroup;
 			children = (
@@ -110,6 +123,7 @@
 		AE4733FC21B910650012B91F /* OpenGL */ = {
 			isa = PBXGroup;
 			children = (
+				AE37A64C21B95D2F0060A7CA /* logo.stl */,
 				AE47340421B911760012B91F /* Library */,
 				AE4733FD21B910650012B91F /* main.cpp */,
 				AE37A63C21B928E20060A7CA /* shader.frag */,
@@ -123,6 +137,7 @@
 		AE47340421B911760012B91F /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				AE37A64D21B95D400060A7CA /* STL */,
 				AE37A63B21B928D20060A7CA /* glad */,
 				AE47340521B911920012B91F /* GLM */,
 			);
@@ -221,6 +236,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE37A65021B95D4B0060A7CA /* stl.cpp in Sources */,
 				AE4733FE21B910650012B91F /* main.cpp in Sources */,
 				AE37A64B21B931B90060A7CA /* glad.c in Sources */,
 			);

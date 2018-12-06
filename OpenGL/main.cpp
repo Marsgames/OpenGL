@@ -8,6 +8,7 @@
 #include <glad/glad.h>
 #include <glfw3.h>
 #include <GLM/vec3.hpp>
+#include <STL/stl.h>
 
 #include <vector>
 #include <iostream>
@@ -17,6 +18,7 @@
 #include <string>
 
 using namespace std;
+using namespace glm;
 
 static void error_callback(int /*error*/, const char* description)
 {
@@ -58,7 +60,7 @@ vector<Particule> MakeParticules(const int n)
                 distribution01(generator),
                 distribution01(generator)
             },
-            {0.f, 0.f, 0.f}
+            {0.f, 0.f, 0.f},
         });
     }
     
@@ -67,14 +69,14 @@ vector<Particule> MakeParticules(const int n)
 
 GLuint MakeShader(GLuint t, string path)
 {
-//    cout << "the path is : " << path << endl;
+    //    cout << "the path is : " << path << endl;
     ifstream file(path.c_str(), ios::in);
     ostringstream contents;
     contents << file.rdbuf();
     file.close();
     
     const auto content = contents.str();
-//    cout << content << endl;
+    //    cout << content << endl;
     
     const auto s = glCreateShader(t);
     
@@ -122,6 +124,11 @@ GLuint AttachAndLink(vector<GLuint> shaders)
     return prg;
 }
 
+void DrawSTL()
+{
+    ReadStl("/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/logo.stl");
+}
+
 int main(void)
 {
     GLFWwindow* window;
@@ -130,8 +137,8 @@ int main(void)
     if (!glfwInit())
         exit(EXIT_FAILURE);
     
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    //    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    //    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
@@ -156,8 +163,8 @@ int main(void)
         exit(-1);
     }
     
-//    size_t nParticules = 10000;
-    const size_t nParticules = 500;
+    //    size_t nParticules = 10000;
+    const size_t nParticules = 10000;
     auto particules = MakeParticules(nParticules);
     
     // Shader
@@ -180,31 +187,34 @@ int main(void)
     
     // Bindings
     const auto index = glGetAttribLocation(program, "position");
-//    const auto indexColor = glGetAttribLocation(program, "color");
+    const auto indexColor = glGetAttribLocation(program, "color");
     
     glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(Particule), nullptr);
     glEnableVertexAttribArray(index);
     
-//    glVertexAttribPointer(indexColor, 3, GL_FLOAT, GL_FALSE, sizeof(Particule), nullptr);
-//    glEnableVertexAttribArray(indexColor);
+    glVertexAttribPointer(indexColor, 3, GL_FLOAT, GL_FALSE, sizeof(Particule), (void*)sizeof(vec3));
+    glEnableVertexAttribArray(indexColor);
     
     glPointSize(5.f);
     
-//    while (!glfwWindowShouldClose(window))
+    DrawSTL();
+    
+    //    while (!glfwWindowShouldClose(window))
+    default_random_engine generator;
     while (nParticules > 0 && !glfwWindowShouldClose(window))
     {
-//        nParticules--;
-//        particules = MakeParticules(nParticules);
-//        float f = 0;
+        //        nParticules--;
+        //        particules = MakeParticules(nParticules);
+        
         for (Particule& p : particules)
         {
-            p.position = p.position - glm::vec3(.0, .0001, .0);
-//            p.color = glm::vec3(f, f, f);
-//            f += 0.01;
-//            if (f > 1)
-//            {
-//                f = 0;
-//            }
+            uniform_real_distribution<float> distribution01(p.color[0] - .05, p.color[0] + .05);
+            uniform_real_distribution<float> distribution012(p.color[1] - .05, p.color[1] + .05);
+            uniform_real_distribution<float> distribution013(p.color[2] - .05, p.color[2] + .05);
+            
+            p.color[0] = distribution01(generator);
+            p.color[1] = distribution012(generator);
+            p.color[2] = distribution013(generator);
         }
         
         int width, height;
@@ -213,7 +223,7 @@ int main(void)
         glViewport(0, 0, width, height);
         
         glClear(GL_COLOR_BUFFER_BIT);
-//         glClearColor(1.f, 0.0f, 1.f, 1.0f);
+        //         glClearColor(1.f, 0.0f, 1.f, 1.0f);
         
         glDrawArrays(GL_POINTS, 0, nParticules);
         
@@ -221,14 +231,9 @@ int main(void)
         glfwPollEvents();
         
         glBufferSubData(GL_ARRAY_BUFFER, 0, nParticules * sizeof(Particule), particules.data());
-
+        
     }
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
-}
-
-void MovePixel()
-{
-    
 }
