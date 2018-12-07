@@ -163,24 +163,55 @@ int main(void)
     int action = 0;
     cin >> action;
     
+    GLenum type = GL_POINTS;
+    GLint startIndex = 0;
+    GLsizei count;
+    
     switch (action) {
         case 0:
-            DrawParticle(window);
+            count = DrawParticle(window);
+            type = GL_POINTS;
             break;
         case 1:
-            DrawSTL("logo.stl", window);
+            count = DrawSTL("logo.stl", window);
+            type = GL_TRIANGLES;
             break;
             
         default:
-            DrawParticle(window);
+            count = DrawParticle(window);
             break;
     }
     
+    while (!glfwWindowShouldClose(window))
+    {
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        
+        glViewport(0, 0, width, height);
+        
+        glClear(GL_COLOR_BUFFER_BIT);
+        // glClearColor(1.f, 0.0f, 1.f, 1.0f);
+        
+        
+        glDrawArrays(type, startIndex, count);
+        
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+        
+        // glBufferSubData(GL_ARRAY_BUFFER, 0, logoArray.size() * sizeof(Triangle), logoArray.data());
+        
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
+    
 }
 
-void DrawParticle(GLFWwindow* window)
+GLsizei DrawParticle(GLFWwindow* window)
 {
-    const size_t nParticules = 10000;
+//    const size_t nParticules = 10000;
+    const size_t nParticules = 5000;
+    
     auto particules = MakeParticules(nParticules);
     
     // Shader
@@ -214,37 +245,48 @@ void DrawParticle(GLFWwindow* window)
     glPointSize(5.f);
     
     
-    //    while (!glfwWindowShouldClose(window))
     default_random_engine generator;
     while (nParticules > 0 && !glfwWindowShouldClose(window))
     {
         //        nParticules--;
         //        particules = MakeParticules(nParticules);
-        
+
         for (Particule& p : particules)
         {
             uniform_real_distribution<float> distribution01(p.color[0] - .05, p.color[0] + .05);
             uniform_real_distribution<float> distribution012(p.color[1] - .05, p.color[1] + .05);
             uniform_real_distribution<float> distribution013(p.color[2] - .05, p.color[2] + .05);
-            
+//            uniform_real_distribution<float> distribution01(0.25, 0.75);
+//            uniform_real_distribution<float> distribution012(0.25, .75);
+//            uniform_real_distribution<float> distribution013(0.25, .75);
+            uniform_real_distribution<float> distribution014(-0.0005, 0.0005);
+
+
             p.color[0] = distribution01(generator);
             p.color[1] = distribution012(generator);
             p.color[2] = distribution013(generator);
+            
+            p.position = p.position - vec3(distribution014(generator), .0001, 0);
+            if (p.position[1] < -1)
+            {
+                p.position[1] = 1;
+            }
         }
-        
+
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
-        
+
         glViewport(0, 0, width, height);
-        
+
         glClear(GL_COLOR_BUFFER_BIT);
         //         glClearColor(1.f, 0.0f, 1.f, 1.0f);
-        
+
         glDrawArrays(GL_POINTS, 0, nParticules);
+//        return nParticules;
         
         glfwSwapBuffers(window);
         glfwPollEvents();
-        
+
         glBufferSubData(GL_ARRAY_BUFFER, 0, nParticules * sizeof(Particule), particules.data());
         
     }
@@ -253,7 +295,7 @@ void DrawParticle(GLFWwindow* window)
     exit(EXIT_SUCCESS);
 }
 
-void DrawSTL(string path, GLFWwindow* window)
+GLint DrawSTL(string path, GLFWwindow* window)
 {
     vector<Triangle> logoArray = ReadStl((Path + path).c_str());
 
@@ -280,29 +322,5 @@ void DrawSTL(string path, GLFWwindow* window)
     glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), nullptr);
     glEnableVertexAttribArray(index);
     
-    //    glVertexAttribPointer(indexColor, 3, GL_FLOAT, GL_FALSE, sizeof(Particule), (void*)sizeof(vec3));
-    //    glEnableVertexAttribArray(indexColor);
-    
-    while (!glfwWindowShouldClose(window))
-    {
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
-        
-        glViewport(0, 0, width, height);
-        
-        glClear(GL_COLOR_BUFFER_BIT);
-        // glClearColor(1.f, 0.0f, 1.f, 1.0f);
-        
-        
-        glDrawArrays(GL_TRIANGLES, 0, logoArray.size() * 3);
-        
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-        
-        // glBufferSubData(GL_ARRAY_BUFFER, 0, logoArray.size() * sizeof(Triangle), logoArray.data());
-        
-    }
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    exit(EXIT_SUCCESS);
+    return logoArray.size() * 3;
 }

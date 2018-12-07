@@ -28,5 +28,5 @@ static void key_callback(GLFWwindow* window, int key, int /*scancode*/, int acti
 vector<Particule> MakeParticules(const int n);
 GLuint MakeShader(GLuint t, string path);
 GLuint AttachAndLink(vector<GLuint> shaders);
-void DrawSTL(string path, GLFWwindow* window);
-void DrawParticle(GLFWwindow* window);
+GLsizei DrawParticle(GLFWwindow* window);
+GLint DrawSTL(string path, GLFWwindow* window);
