@@ -21,6 +21,97 @@
 using namespace std;
 using namespace glm;
 
+int main(void)
+{
+    srand(0);
+    
+    GLFWwindow* window;
+    glfwSetErrorCallback(error_callback);
+    
+    if (!glfwInit())
+        exit(EXIT_FAILURE);
+    
+    //    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    //    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
+    window = glfwCreateWindow(640, 480, "Simple example", 0, 0);
+    
+    if (!window)
+    {
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+    
+    glfwSetKeyCallback(window, key_callback);
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
+    // NOTE: OpenGL error checks have been omitted for brevity
+    
+    if(!gladLoadGL()) {
+        cerr << "Something went wrong!" << endl;
+        exit(-1);
+    }
+    
+    
+    /////////////////////////////////////////////////////////////////////////
+    ///
+    ///
+    ///
+    /////////////////////////////////////////////////////////////////////////
+    
+    //    cout << "0 : DrawParticle" << endl << "1 : DrawSTL(logo)" << endl;
+    //    int action = 0;
+    //    cin >> action;
+    
+    GLenum type = GL_POINTS;
+    GLint startIndex = 0;
+    GLsizei count;
+    
+    //    switch (action) {
+    //        case 0:
+    //            count = DrawParticle(window);
+    //            type = GL_POINTS;
+    //            break;
+    //        case 1:
+    count = DrawSTL("logo.stl", window);
+    type = GL_TRIANGLES;
+    //            break;
+    //
+    //        default:
+    //            count = DrawParticle(window);
+    //            break;
+    //    }
+    
+    while (!glfwWindowShouldClose(window))
+    {
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        
+        glViewport(0, 0, width, height);
+        
+        glClear(GL_COLOR_BUFFER_BIT);
+        // glClearColor(1.f, 0.0f, 1.f, 1.0f);
+        
+        
+        glDrawArrays(type, startIndex, count);
+        
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+        
+        // glBufferSubData(GL_ARRAY_BUFFER, 0, logoArray.size() * sizeof(Triangle), logoArray.data());
+        
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
+    
+}
+
 static void error_callback(int /*error*/, const char* description)
 {
     cerr << "Error: " << description << endl;
@@ -118,99 +209,10 @@ GLuint AttachAndLink(vector<GLuint> shaders)
     return prg;
 }
 
-int main(void)
-{
-    GLFWwindow* window;
-    glfwSetErrorCallback(error_callback);
-    
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-    
-    //    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    //    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-    
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
-    window = glfwCreateWindow(640, 480, "Simple example", 0, 0);
-    
-    if (!window)
-    {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-    
-    glfwSetKeyCallback(window, key_callback);
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-    // NOTE: OpenGL error checks have been omitted for brevity
-    
-    if(!gladLoadGL()) {
-        cerr << "Something went wrong!" << endl;
-        exit(-1);
-    }
-    
-    
-    /////////////////////////////////////////////////////////////////////////
-    ///
-    ///
-    ///
-    /////////////////////////////////////////////////////////////////////////
-    
-    cout << "0 : DrawParticle" << endl << "1 : DrawSTL(logo)" << endl;
-    int action = 0;
-    cin >> action;
-    
-    GLenum type = GL_POINTS;
-    GLint startIndex = 0;
-    GLsizei count;
-    
-    switch (action) {
-        case 0:
-            count = DrawParticle(window);
-            type = GL_POINTS;
-            break;
-        case 1:
-            count = DrawSTL("logo.stl", window);
-            type = GL_TRIANGLES;
-            break;
-            
-        default:
-            count = DrawParticle(window);
-            break;
-    }
-    
-    while (!glfwWindowShouldClose(window))
-    {
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
-        
-        glViewport(0, 0, width, height);
-        
-        glClear(GL_COLOR_BUFFER_BIT);
-        // glClearColor(1.f, 0.0f, 1.f, 1.0f);
-        
-        
-        glDrawArrays(type, startIndex, count);
-        
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-        
-        // glBufferSubData(GL_ARRAY_BUFFER, 0, logoArray.size() * sizeof(Triangle), logoArray.data());
-        
-    }
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    exit(EXIT_SUCCESS);
-    
-}
-
 GLsizei DrawParticle(GLFWwindow* window)
 {
-//    const size_t nParticules = 10000;
-    const size_t nParticules = 5000;
+    const size_t nParticules = 10000;
+    //    const size_t nParticules = 5000;
     
     auto particules = MakeParticules(nParticules);
     
@@ -242,7 +244,8 @@ GLsizei DrawParticle(GLFWwindow* window)
     glVertexAttribPointer(indexColor, 3, GL_FLOAT, GL_FALSE, sizeof(Particule), (void*)sizeof(vec3));
     glEnableVertexAttribArray(indexColor);
     
-    glPointSize(5.f);
+    //    glPointSize(5.f);
+    glPointSize(1.f);
     
     
     default_random_engine generator;
@@ -250,18 +253,18 @@ GLsizei DrawParticle(GLFWwindow* window)
     {
         //        nParticules--;
         //        particules = MakeParticules(nParticules);
-
+        
         for (Particule& p : particules)
         {
             uniform_real_distribution<float> distribution01(p.color[0] - .05, p.color[0] + .05);
             uniform_real_distribution<float> distribution012(p.color[1] - .05, p.color[1] + .05);
             uniform_real_distribution<float> distribution013(p.color[2] - .05, p.color[2] + .05);
-//            uniform_real_distribution<float> distribution01(0.25, 0.75);
-//            uniform_real_distribution<float> distribution012(0.25, .75);
-//            uniform_real_distribution<float> distribution013(0.25, .75);
+            //            uniform_real_distribution<float> distribution01(0.25, 0.75);
+            //            uniform_real_distribution<float> distribution012(0.25, .75);
+            //            uniform_real_distribution<float> distribution013(0.25, .75);
             uniform_real_distribution<float> distribution014(-0.0005, 0.0005);
-
-
+            
+            
             p.color[0] = distribution01(generator);
             p.color[1] = distribution012(generator);
             p.color[2] = distribution013(generator);
@@ -272,21 +275,21 @@ GLsizei DrawParticle(GLFWwindow* window)
                 p.position[1] = 1;
             }
         }
-
+        
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
-
+        
         glViewport(0, 0, width, height);
-
-        glClear(GL_COLOR_BUFFER_BIT);
-        //         glClearColor(1.f, 0.0f, 1.f, 1.0f);
-
+        
+        //        glClear(GL_COLOR_BUFFER_BIT);
+        //                 glClearColor(1.f, 0.0f, 1.f, 1.0f);
+        
         glDrawArrays(GL_POINTS, 0, nParticules);
-//        return nParticules;
+        //        return nParticules;
         
         glfwSwapBuffers(window);
         glfwPollEvents();
-
+        
         glBufferSubData(GL_ARRAY_BUFFER, 0, nParticules * sizeof(Particule), particules.data());
         
     }
@@ -295,10 +298,10 @@ GLsizei DrawParticle(GLFWwindow* window)
     exit(EXIT_SUCCESS);
 }
 
-GLint DrawSTL(string path, GLFWwindow* window)
+GLint DrawSTL(const string path, GLFWwindow* window)
 {
-    vector<Triangle> logoArray = ReadStl((Path + path).c_str());
-
+    vector<Triangle> triangleArray = ReadStl((Path + path).c_str());
+    
     const auto vertex = MakeShader(GL_VERTEX_SHADER, ShaderString + "shaderSTL.vert");
     const auto fragment = MakeShader(GL_FRAGMENT_SHADER, ShaderString + "shaderSTL.frag");
     
@@ -313,14 +316,59 @@ GLint DrawSTL(string path, GLFWwindow* window)
     
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, logoArray.size() * sizeof(Triangle), logoArray.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, triangleArray.size() * sizeof(Triangle), triangleArray.data(), GL_STATIC_DRAW);
     
     // Bindings
     const auto index = glGetAttribLocation(programSTL, "position");
-    //    const auto indexColor = glGetAttribLocation(program, "color");
+    //    const auto indexColor = glGetAttribLocation(programSTL, "color");
     
     glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), nullptr);
     glEnableVertexAttribArray(index);
     
-    return logoArray.size() * 3;
+    //    int vec3Size = sizeof(vec3) * 3;
+    //    glVertexAttribPointer(indexColor, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle), (void*)vec3Size);
+    //    glEnableVertexAttribArray(indexColor);
+    //
+    //    default_random_engine generator;
+    //    uniform_real_distribution<float> distribution01(0.5, 1);
+    //    for (Triangle& t : triangleArray)
+    //    {
+    //        t.color = vec3(1, 0, 1);
+    ////        t.color = vec3(distribution01(generator), distribution01(generator), distribution01(generator));
+    //    }
+    vec3 initSize = triangleArray[0].p0;
+    bool reverse = false;
+    while (!glfwWindowShouldClose(window))
+    {
+        for (Triangle& t : triangleArray)
+        {
+            t.p0 = reverse ? t.p0 / vec1(1.002) : t.p0 * vec1(1.002);
+            t.p1 = reverse ? t.p1 / vec1(1.002) : t.p1 * vec1(1.002);
+            t.p2 = reverse ? t.p2 / vec1(1.002) : t.p2 * vec1(1.002);
+        }
+        
+        reverse = triangleArray[0].p0[0] > (initSize * vec1(3))[0] ? true : triangleArray[0].p0[0] < initSize[0] * vec1(0.5)[0] ? false : reverse;
+        
+        int width, height;
+        glfwGetFramebufferSize(window, &width, &height);
+        
+        glViewport(0, 0, width, height);
+        
+                glClear(GL_COLOR_BUFFER_BIT);
+        //                 glClearColor(1.f, 0.0f, 1.f, 1.0f);
+        
+        glDrawArrays(GL_TRIANGLES, 0, (GLint)(triangleArray.size() * 3));
+        //        return nParticules;
+        
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+        
+        glBufferSubData(GL_ARRAY_BUFFER, 0, triangleArray.size() * sizeof(Triangle), triangleArray.data());
+        
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
+    
+    return (GLint)(triangleArray.size() * 3);
 }

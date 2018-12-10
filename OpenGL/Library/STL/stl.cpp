@@ -1,6 +1,7 @@
 #include "stl.h"
 
 #include <fstream>
+#include <iostream>
 
 std::vector<Triangle> ReadStl(const char * filename)
 {
@@ -39,4 +40,9 @@ std::vector<Triangle> ReadStl(const char * filename)
 	{
 		return {};
 	}
+}
+
+void Print(glm::vec3 vec)
+{
+    std::cout << "(" << vec[0] << ", " << vec[1] << ", " << vec[2] << ")" << std::endl;
 }
