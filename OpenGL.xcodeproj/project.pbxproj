@@ -378,6 +378,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include/GLFW,
 					/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/Library,
+					/usr/local/Cellar/glfw/3.3/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
@@ -395,6 +396,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include/GLFW,
 					/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/Library,
+					/usr/local/Cellar/glfw/3.3/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,

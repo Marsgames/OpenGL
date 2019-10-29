@@ -10,8 +10,8 @@
 
 #include <string>
 
-using namespace std;
-using namespace glm;
+using std::string;
+using std::vector;
 
 const string ShaderString = "/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/Shaders/";
 const string Path = "/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/";
