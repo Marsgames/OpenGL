@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AE37A64421B9300C0060A7CA /* libglfw.3.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE37A64221B9300B0060A7CA /* libglfw.3.2.dylib */; };
 		AE37A64521B9300C0060A7CA /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AE37A64321B9300B0060A7CA /* libglfw3.a */; };
 		AE37A64B21B931B90060A7CA /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = AE37A64A21B931B90060A7CA /* glad.c */; };
 		AE37A65021B95D4B0060A7CA /* stl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE37A64E21B95D4A0060A7CA /* stl.cpp */; };
 		AE4733FE21B910650012B91F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE4733FD21B910650012B91F /* main.cpp */; };
+		AE79416C2368877200AA8432 /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE7941692368877200AA8432 /* libglfw.3.3.dylib */; };
+		AE79416D2368877200AA8432 /* libglfw.3.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = AE7941692368877200AA8432 /* libglfw.3.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,6 +24,17 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		AE7941722368877200AA8432 /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AE79416D2368877200AA8432 /* libglfw.3.3.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -72,6 +84,9 @@
 		AE47342021B911EF0012B91F /* packing.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = packing.hpp; sourceTree = "<group>"; };
 		AE47342121B911F00012B91F /* simd */ = {isa = PBXFileReference; lastKnownFileType = folder; path = simd; sourceTree = "<group>"; };
 		AE47342221B911F00012B91F /* vec3.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = vec3.hpp; sourceTree = "<group>"; };
+		AE7941692368877200AA8432 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
+		AE79416A2368877200AA8432 /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3/lib/libglfw.dylib; sourceTree = "<group>"; };
+		AE79416B2368877200AA8432 /* libglfw.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.3/lib/libglfw.3.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE37A64421B9300C0060A7CA /* libglfw.3.2.dylib in Frameworks */,
+				AE79416C2368877200AA8432 /* libglfw.3.3.dylib in Frameworks */,
 				AE37A64521B9300C0060A7CA /* libglfw3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +105,9 @@
 		AE37A63F21B92B9E0060A7CA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AE7941692368877200AA8432 /* libglfw.3.3.dylib */,
+				AE79416B2368877200AA8432 /* libglfw.3.dylib */,
+				AE79416A2368877200AA8432 /* libglfw.dylib */,
 				AE37A64221B9300B0060A7CA /* libglfw.3.2.dylib */,
 				AE37A64321B9300B0060A7CA /* libglfw3.a */,
 				AE37A64021B92B9E0060A7CA /* OpenGL.framework */,
@@ -204,6 +222,7 @@
 				AE4733F621B910650012B91F /* Sources */,
 				AE4733F721B910650012B91F /* Frameworks */,
 				AE4733F821B910650012B91F /* CopyFiles */,
+				AE7941722368877200AA8432 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -383,6 +402,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/Library/glad/,
+					/usr/local/Cellar/glfw/3.3/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -401,6 +421,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/Users/Raph/Documents/Gamagora/Synthese/OpenGL/OpenGL/Library/glad/,
+					/usr/local/Cellar/glfw/3.3/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -33,6 +33,7 @@ int main(void)
     srand(0);
     
     GLFWwindow* window;
+//    GLFWwindow* window2;
     glfwSetErrorCallback(error_callback);
     
     if (!glfwInit())
@@ -47,15 +48,25 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     window = glfwCreateWindow(640, 480, "Simple example", 0, 0);
+//    window2 = glfwCreateWindow(640, 480, "Simple example2", 0, 0);
     
     if (!window)
     {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+//    if (!window2)
+//    {
+//        glfwTerminate();
+//        exit(EXIT_FAILURE);
+//    }
     
     glfwSetKeyCallback(window, key_callback);
     glfwMakeContextCurrent(window);
+    
+//    glfwSetKeyCallback(window2, key_callback);
+//    glfwMakeContextCurrent(window2);
+    
     glfwSwapInterval(1);
     // NOTE: OpenGL error checks have been omitted for brevity
     
@@ -71,33 +82,40 @@ int main(void)
     ///
     /////////////////////////////////////////////////////////////////////////
     
-    //    cout << "0 : DrawParticle" << endl << "1 : DrawSTL(logo)" << endl;
-    //    int action = 0;
-    //    cin >> action;
+        cout << "0 : DrawParticle(clear)" << endl << "1 : DrawSTL(logo)" << endl << "2 : DrawParticle(don't clear)" << endl;
+        int action = 0;
+    std::cin >> action;
     
     GLenum type = GL_POINTS;
     GLint startIndex = 0;
     GLsizei count;
+//    GLsizei count2;
     
-    //    switch (action) {
-    //        case 0:
-    //            count = DrawParticle(window);
-    //            type = GL_POINTS;
-    //            break;
-    //        case 1:
+        switch (action) {
+            case 0:
+                count = DrawParticle(window, true);
+                type = GL_POINTS;
+                break;
+            case 1:
     count = DrawSTL("logo.stl", window);
     type = GL_TRIANGLES;
-    //            break;
-    //
-    //        default:
-    //            count = DrawParticle(window);
-    //            break;
-    //    }
+                break;
+                
+            case 2:
+                count = DrawParticle(window, false);
+                type = GL_POINTS;
+                break;
     
-    while (!glfwWindowShouldClose(window))
+            default:
+                count = DrawParticle(window, true);
+                break;
+        }
+    
+    while (!glfwWindowShouldClose(window))// && !glfwWindowShouldClose(window2))
     {
         int width, height;
         glfwGetFramebufferSize(window, &width, &height);
+//        glfwGetFramebufferSize(window2, &width, &height);
         
         glViewport(0, 0, width, height);
         
@@ -108,12 +126,14 @@ int main(void)
         glDrawArrays(type, startIndex, count);
         
         glfwSwapBuffers(window);
+//        glfwSwapBuffers(window2);
         glfwPollEvents();
         
         // glBufferSubData(GL_ARRAY_BUFFER, 0, logoArray.size() * sizeof(Triangle), logoArray.data());
         
     }
     glfwDestroyWindow(window);
+//    glfwDestroyWindow(window2);
     glfwTerminate();
     exit(EXIT_SUCCESS);
     
@@ -216,7 +236,7 @@ GLuint AttachAndLink(vector<GLuint> shaders)
     return prg;
 }
 
-GLsizei DrawParticle(GLFWwindow* window)
+GLsizei DrawParticle(GLFWwindow* window, const bool clear)
 {
     const size_t nParticules = 10000;
     //    const size_t nParticules = 5000;
@@ -288,8 +308,11 @@ GLsizei DrawParticle(GLFWwindow* window)
 
         glViewport(0, 0, width, height);
 
-        //        glClear(GL_COLOR_BUFFER_BIT);
-        //                 glClearColor(1.f, 0.0f, 1.f, 1.0f);
+        if (clear)
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+//                         glClearColor(1.f, 0.0f, 1.f, 1.0f);
 
         glDrawArrays(GL_POINTS, 0, nParticules);
         //        return nParticules;
